@@ -8,6 +8,9 @@ import { addDoc, collection } from "firebase/firestore";
 const HlogFactory = ({userObj}) => {
     const [Hlog,setHlog] = useState("");
     const [attachment,setAttachment] = useState("");
+    const [HlogT,setHlogT] = useState("");
+    const [isWrite,setIsWrite] = useState(false);
+    let isEnter;
 
     const onSubmit = async(event) => {
         event.preventDefault();
@@ -22,16 +25,29 @@ const HlogFactory = ({userObj}) => {
             createdAt: Date.now(),
             creatorId: userObj.uid,
             attachmentUrl,
+            title:HlogT,
         };
         await addDoc(collection(dbService,"Hlogs"),HlogObj);
         
         setHlog("");
+        setHlogT("");
         setAttachment("");
+        setIsWrite(false);
     };
     const onChange = (event) => {
         const { target:{value},} = event;
-        setHlog(value);
+        isEnter = value;
+        if(value.keyCode == 13){
+            isEnter += isEnter + '\n';
+        }
+        console.log(isEnter);
+        setHlog(isEnter);
     };
+    const onChangeT = (event) => {
+        const { target:{value},} = event;
+        setHlogT(value);
+    };
+    
     const onFileChange = (event) => {
         const {target: {files},} = event;
         const theFile = files[0];
@@ -47,30 +63,53 @@ const HlogFactory = ({userObj}) => {
     };
 
     return (
-        <form onSubmit={onSubmit}>
-            <input 
-                value={Hlog}
-                onChange={onChange}
-                type="text" 
-                placeholder="What's on your mind?"
-                maxLength={120}
-            />
-            <input 
-                type="file"
-                accept="image/*"
-                onChange={onFileChange}
-            />
-            <input 
-                type="submit"
-                value="Hlog"
-            />
-            {attachment && 
-                <div>
-                    <img src={attachment} width="100px" height="100px" />
-                    <button onClick={onClearAttachmentClick}>Clear</button>
-                </div>
+        <div>
+            {isWrite ? (
+                <>
+                <form onSubmit={onSubmit}>
+                    <input 
+                        type="text"
+                        value={HlogT}
+                        onChange={onChangeT} 
+                        placeholder="Write title"
+                        required
+                    />
+                    <br />
+                    <br />
+                    <textarea 
+                        value={isEnter}
+                        onChange={onChange} 
+                        placeholder="What's on your mind?"
+                        required
+                        cols={50}
+                        rows={20}
+                    />
+                    <input 
+                        type="file"
+                        accept="image/*"
+                        onChange={onFileChange}
+                    />
+                    <input 
+                        type="submit"
+                        value="Hlog"
+                    />
+                    <button onClick={()=>{setIsWrite(false);setHlog("");setHlogT("");}}>Cancel</button>
+
+                    {attachment && 
+                        <div>
+                            <img src={attachment} width="100px" height="100px" />
+                            <button onClick={onClearAttachmentClick}>Clear</button>
+                        </div>
+                    }
+                </form>
+                </>
+            ):
+              <>
+                <button onClick={()=>setIsWrite(true)}>Write</button>
+              </>
             }
-        </form>)
+        </div>
+    );
 };
 
 export default HlogFactory;
