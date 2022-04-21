@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/hlog/static/js/main.3d0a0e41.js",
+    "index.html": "/hlog/index.html",
+    "main.3d0a0e41.js.map": "/hlog/static/js/main.3d0a0e41.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.3d0a0e41.js"
+  ]
+}
