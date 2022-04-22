@@ -40,7 +40,6 @@ const HlogFactory = ({userObj}) => {
         if(value.keyCode == 13){
             isEnter += isEnter + '\n';
         }
-        console.log(isEnter);
         setHlog(isEnter);
     };
     const onChangeT = (event) => {

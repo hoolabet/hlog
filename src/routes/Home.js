@@ -7,7 +7,7 @@ import Hlogz from "../components/Hlogz";
 
 const Home = ({userObj}) => {
     const [Hlogs,setHlogs] = useState([]);
-
+    const [re,setRe] = useState([{}]);
     useEffect(() => {
         const q = query(collection(dbService,"Hlogs"),
         orderBy("createdAt","desc"));
@@ -15,11 +15,14 @@ const Home = ({userObj}) => {
             const HlogArr = snapshot.docs.map((doc) => ({
                 id:doc.id,
                 ...doc.data(),
-            }));
+            }),
+
+            );
             setHlogs(HlogArr);
         });
+        
     },[]);
-    
+    console.log(Hlogs);
     return (
     <div>
         <HlogFactory userObj={userObj}/>
