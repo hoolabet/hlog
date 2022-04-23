@@ -3,6 +3,7 @@ import { deleteDoc , doc, updateDoc } from "firebase/firestore";
 import { deleteObject , ref } from "firebase/storage";
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
+import styles from "./Hlogz.module.css";
 
 const Hlogz = ({HlogObj, isOwner , attachmentUrl}) => {
     const [editing, setEditing] = useState(false);
@@ -17,6 +18,7 @@ const Hlogz = ({HlogObj, isOwner , attachmentUrl}) => {
     const HD = new Date(da).getHours();
     const mD = new Date(da).getMinutes();
     const hid = HlogObj.id;
+    const titleHTML = document.querySelector('title');
 
     const onDeleteClick = async(e) => {
         const ok = window.confirm("Are you sure you want to delete this Hlog?");
@@ -73,9 +75,13 @@ const Hlogz = ({HlogObj, isOwner , attachmentUrl}) => {
                     <input 
                         type="submit" 
                         value="Update Hlog" 
+                        className={styles.write_button}
                     />
                 </form>
-                <button onClick={toggleEditing}>Cancel</button>
+                <button 
+                    onClick={toggleEditing}
+                    className={styles.write_button}
+                >Cancel</button>
                 </>
             ) : (
                 <div style={{borderBottom:"1px solid black" ,padding:"5px"}}>
@@ -90,6 +96,9 @@ const Hlogz = ({HlogObj, isOwner , attachmentUrl}) => {
                                 url:HlogObj.attachmentUrl,
                                 H:hid,
                                 deleted:deleted,
+                            }}
+                            onClick={()=>{
+                                titleHTML.innerHTML=`${HlogObj.title}`;
                             }}    
                         >
                             {HlogObj.title}
@@ -102,8 +111,14 @@ const Hlogz = ({HlogObj, isOwner , attachmentUrl}) => {
                     {HlogObj.attachmentUrl && <img src={HlogObj.attachmentUrl} width="100px" height="100px" />}
                     {isOwner && (
                         <>
-                            <button onClick={onDeleteClick}>Delete</button>
-                            <button onClick={toggleEditing}>Update</button>
+                            <button 
+                                onClick={onDeleteClick}
+                                className={styles.write_button}    
+                            >Delete</button>
+                            <button 
+                                onClick={toggleEditing}
+                                className={styles.write_button}
+                            >Update</button>
                         </>    
                     )}    
                 </div>

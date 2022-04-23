@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { storageService, dbService } from "../fbase";
 import { ref, uploadString , getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import { addDoc, collection } from "firebase/firestore";
-
+import styles from './HlogFactory.module.css';
 
 const HlogFactory = ({userObj}) => {
     const [Hlog,setHlog] = useState("");
@@ -11,6 +11,11 @@ const HlogFactory = ({userObj}) => {
     const [HlogT,setHlogT] = useState("");
     const [isWrite,setIsWrite] = useState(false);
     let isEnter;
+    const imageInput = useRef();
+
+    const onClickImageUpload = () => {
+        imageInput.current.click();
+    };
 
     const onSubmit = async(event) => {
         event.preventDefault();
@@ -87,24 +92,41 @@ const HlogFactory = ({userObj}) => {
                         type="file"
                         accept="image/*"
                         onChange={onFileChange}
+                        style={{display:"none"}}
+                        ref={imageInput}
                     />
                     <input 
                         type="submit"
                         value="Hlog"
+                        className={styles.write_button}
                     />
-                    <button onClick={()=>{setIsWrite(false);setHlog("");setHlogT("");}}>Cancel</button>
+                    <button 
+                        onClick={()=>{
+                            setIsWrite(false);setHlog("");setHlogT("");}}
+                            className={styles.write_button}
+                        >Cancel</button>
 
                     {attachment && 
                         <div>
                             <img src={attachment} width="100px" height="100px" />
-                            <button onClick={onClearAttachmentClick}>Clear</button>
+                            <button 
+                                onClick={onClearAttachmentClick}
+                                className={styles.write_button}
+                            >Clear</button>
                         </div>
                     }
                 </form>
+                <button 
+                    onClick={onClickImageUpload}
+                    className={styles.write_button}    
+                >Image</button>
                 </>
             ):
               <>
-                <button onClick={()=>setIsWrite(true)}>Write</button>
+                <button 
+                    onClick={()=>setIsWrite(true)}
+                    className={styles.write_button}
+                >Write</button>
               </>
             }
         </div>
